@@ -1,0 +1,50 @@
+import pytest
+from book_manager import BookManager
+
+
+@pytest.fixture
+def setup_book_manager():
+    books = [
+        {
+            "id": 1,
+            "title": "Test Book 1",
+            "author": "author 1",
+            "year": "2023",
+            "status": "В наличии"
+        },
+        {
+            "id": 2,
+            "title": "Test Book 2",
+            "author": "author 2",
+            "year": "2023",
+            "status": "В наличии"
+        },
+    ]
+    return BookManager(books)
+
+
+def test_add_book(setup_book_manager):
+    setup_book_manager.add_book("Test Book 3", "author 3", "2023")
+    assert len(setup_book_manager.books) == 3
+    assert setup_book_manager.books[2].title == "Test Book 3"
+
+
+def test_view_book(setup_book_manager):
+    setup_book_manager.view_book()
+    assert len(setup_book_manager.books) == 2
+
+
+def test_status_book(setup_book_manager):
+    setup_book_manager.status_book(6)
+    assert setup_book_manager.books[0].status == "Выдана"
+    setup_book_manager.status_book(6)
+    assert setup_book_manager.books[0].status == "В наличии"
+
+
+def test_delete_book(setup_book_manager):
+    setup_book_manager.delete_book(8)
+    assert len(setup_book_manager.books) == 1
+
+
+def test_search_book(setup_book_manager):
+    assert setup_book_manager.search_book("Book 1")[0].title == "Test Book 1"
